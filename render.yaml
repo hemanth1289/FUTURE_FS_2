@@ -6,15 +6,18 @@ services:
     name: leadflow-crm
     runtime: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:app
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --workers 2
     envVars:
       - key: SECRET_KEY
-        generateValue: true          # Render auto-generates a secure random value
+        generateValue: true
       - key: ADMIN_USERNAME
-        value: admin                 # Change this in the Render dashboard
+        value: admin
       - key: ADMIN_PASSWORD
-        value: changeme              # Change this in the Render dashboard
+        value: changeme
+      - key: DATABASE_URL
+        value: sqlite:////opt/render/project/data/leads.db
     disk:
       name: db
-      mountPath: /opt/render/project/src
-      sizeGB: 1                      # SQLite lives here — persists across deploys
+      mountPath: /opt/render/project/data
+      sizeGB: 1
+
